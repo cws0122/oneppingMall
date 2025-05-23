@@ -32,7 +32,22 @@ function Detail(props) {
         // 컴포넌트가 mount될때만 실행되게 하고싶으면 [] 빈값으로 하면 된다.
     }, []);
 
+    let [inputValue , setInputValue] = useState(null);
+
+    useEffect(() => {
+        let value = inputValue;
+
+        if (value === '' || isNaN(Number(value))) {
+            setShowText(true);
+        }else{
+            setShowText(false);
+        }
+
+    }, [inputValue]);
+
     let [showAlert , setShowAlert] = useState(true);
+    let [showText , setShowText] = useState(false);
+
 
     // url 파라미터를 받는 함수.
     let {seq} = useParams();
@@ -61,6 +76,12 @@ function Detail(props) {
                             <p>{props.shoose[seq].price}</p>
                             <button className="btn btn-danger">주문하기</button>
                         </div>
+                        <input type="text" onChange={(value) => {
+                            setInputValue(value.target.value);
+                        }}/>
+                        {
+                            showText === true ? <p>그러지마세요</p> : null
+                        }
                     </div>
                 ) : (
                     <div className="row">
