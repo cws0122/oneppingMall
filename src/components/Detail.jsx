@@ -1,19 +1,38 @@
 import {useParams} from "react-router-dom";
-import styled from 'styled-components';
+import {useEffect, useState} from "react";
+// import styled from 'styled-components';
 
 // CSS파일 안쓰고 JS로 스타일 하는법. styled-components , props로 변수로 받아 사용이 가능함.
-let YellowBtn = styled.button`
-    background : ${props => props.bg === 'blue' ? 'white' : 'black'};
-    color : black;
-    padding : 10px;
-`
+// let YellowBtn = styled.button`
+//     background : ${props => props.bg === 'blue' ? 'white' : 'black'};
+//     color : black;
+//     padding : 10px;
+// `
 
-let BlackBox = styled.div`
-    background: grey;
-    padding: 20px;
-`
 
 function Detail(props) {
+
+    // mount , update시 코드 실행
+    // useEffect 안의 코드는 html 렌더링 후 동작.
+    useEffect(() => {
+        let timer = setTimeout(() => {
+            setShowAlert(false);
+        }, 2000)
+
+        // useEffect의 return은 useEffect 동작 전에 실행되는 코드. clean up function이라고 함.
+        // mount시는 실행 안되지만 unmount는 실행됨.
+        return () => {
+            // 타이머 제거 함수.
+            clearTimeout(timer);
+        }
+
+
+        // []은 useEffect 실행조건을 넣을 수 있음.
+        // []안에 있는 변수가 바뀔때마다 (update) 실행됨. mount될때는 한번 꼭 실행하고.
+        // 컴포넌트가 mount될때만 실행되게 하고싶으면 [] 빈값으로 하면 된다.
+    }, []);
+
+    let [showAlert , setShowAlert] = useState(true);
 
     // url 파라미터를 받는 함수.
     let {seq} = useParams();
@@ -25,10 +44,13 @@ function Detail(props) {
             {
                 isValidSeq ? (
                     <div className="row">
-                        <BlackBox>
-                            <YellowBtn bg="green">버튼</YellowBtn>
-                            <YellowBtn bg="blue">버튼</YellowBtn>
-                        </BlackBox>
+                        {
+                            showAlert === true ? <Al></Al> : null
+                        }
+                        {/*<BlackBox>*/}
+                        {/*    <YellowBtn bg="green">버튼</YellowBtn>*/}
+                        {/*    <YellowBtn bg="blue">버튼</YellowBtn>*/}
+                        {/*</BlackBox>*/}
                         <div className="col-md-6">
                             <img src={`https://codingapple1.github.io/shop/shoes${parseInt(seq) + 1}.jpg`}
                                  width="100%"/>
@@ -48,6 +70,14 @@ function Detail(props) {
                     </div>
                 )
             }
+        </div>
+    );
+}
+
+function Al(){
+    return (
+        <div id="alert" className="alert alert-warning">
+            2초이내 구매시 할인.
         </div>
     );
 }
