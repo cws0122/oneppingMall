@@ -4,6 +4,7 @@ import {useState} from "react";
 import product from './data.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './components/Detail.jsx';
+import axios from "axios";
 
 
 function App() {
@@ -89,6 +90,19 @@ function App() {
 
           </Routes>
 
+          <button onClick={() => {
+              axios.get('https://codingapple1.github.io/shop/data2.json')
+                  .then((response) => {
+                      let copyShose = [...shoose];
+                      for (let i = 0; i < response.data.length; i++) {
+                          copyShose.push(response.data[i]);
+                      }
+                      setShoose(copyShose);
+                  })
+                  .catch((reason) => { // 예외처리 시 사용.
+                     console.log(reason.message);
+                  });
+          }}>버튼</button>
 
       </div>
   );
