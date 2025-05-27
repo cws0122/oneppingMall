@@ -1,5 +1,6 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {Nav} from "react-bootstrap";
 // import styled from 'styled-components';
 
 // CSS파일 안쓰고 JS로 스타일 하는법. styled-components , props로 변수로 받아 사용이 가능함.
@@ -47,6 +48,15 @@ function Detail(props) {
 
     let [showAlert , setShowAlert] = useState(true);
     let [showText , setShowText] = useState(false);
+    let [tab , setTab] = useState(0);
+    let [fade , setFade] = useState('');
+
+    useEffect(() => {
+        setTimeout(() => { setFade('end') } , 100);
+        return (() => {
+            setFade('');
+        })
+    }, []);
 
 
     // url 파라미터를 받는 함수.
@@ -55,7 +65,7 @@ function Detail(props) {
     const isValidSeq = !isNaN(Number(seq)) && Number(seq) >= 0 && Number(seq) < props.shoose.length;
 
     return (
-        <div className="container">
+        <div className={`container start ` + fade}>
             {
                 isValidSeq ? (
                     <div className="row">
@@ -91,8 +101,52 @@ function Detail(props) {
                     </div>
                 )
             }
+
+            <Nav variant="tabs"  defaultActiveKey="link0">
+                <Nav.Item>
+                    <Nav.Link onClick={() => {
+                        setTab(0);
+                    }} eventKey="link0">버튼0</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link onClick={() => {
+                        setTab(1);
+                    }} eventKey="link1">버튼1</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link onClick={() => {
+                        setTab(2);
+                    }} eventKey="link2">버튼2</Nav.Link>
+                </Nav.Item>
+            </Nav>
+            <TabContent tab={tab}/>
         </div>
     );
+}
+
+function TabContent(props){
+    // if(props.tab === 0){
+    //     return <div>내용0</div>
+    // }else if(props.tab === 1) {
+    //     return <div>내용1</div>
+    // }else if(props.tab === 2) {
+    //     return <div>내용2</div>
+    // }
+    let [fade, setFade] = useState('');
+
+    useEffect(() => {
+        let a = setTimeout(() => { setFade('end') }, 100);
+
+        // useEffect가 실행되기 전에 실행.
+        return () =>{
+            clearTimeout(a);
+            setFade('');
+        }
+    }, [props.tab]);
+
+    return (<div className={'start ' + fade}>
+        {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][props.tab]}
+    </div>)
 }
 
 function Al(){
